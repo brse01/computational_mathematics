@@ -59,15 +59,12 @@ public class App {
 			System.out.println("faça y = " + x0);
 
 		else {
-			int k = 0;
-
 			double x1 = x0 - (f(x0) / derivada(x0));
 
 			while (Math.abs(f(x1)) > e1 || Math.abs(x1 - x0) > e2) {
 
 				x1 = x0 - (f(x0) / derivada(x0));
 				x0 = x1;
-				k++;
 			}
 			System.out.println("faça y = " + x1 + " - " + f(x1));
 		}
