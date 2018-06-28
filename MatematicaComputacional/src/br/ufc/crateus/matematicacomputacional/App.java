@@ -2,6 +2,8 @@ package br.ufc.crateus.matematicacomputacional;
 
 public class App {
 
+	private static double h = 0.0000001;
+	
 	/**
 	 * e^x
 	 * 
@@ -9,11 +11,11 @@ public class App {
 	 * @return
 	 */
 
-	private static float funcao(double x) {
+	public static float funcao(double x) {
 		return (float) Math.pow(Math.E, x);
 	}
 
-	private static double function(double x) {
+	public static double function(double x) {
 		return Math.pow(2.718281828459045, x) - x - 2.0;
 	}
 
@@ -21,9 +23,22 @@ public class App {
 		return (int) (Math.abs(Math.log10(e_0 / e) / Math.log10(2.0)) + 1);
 	}
 
+	public static double function2(double x) {
+		return x*x + 2*x + 1;
+	}
+	
 	// x^2 - 9
-	private static double derivada(double x) {
+	public static double derivada(double x) {
 		return 3 * Math.pow(x, 2) - 9;
+	}
+	
+	
+	public static double d_derivada(double x){
+		return 2*x + 2;
+	}
+	
+	public static double d_d_derivada(double x){
+		return (function2(x+h)- function2(x))/ h;
 	}
 
 	// CALCULAR A FUNÇÃO QUE ESTEJA TENTANDO APROXIMAR.
@@ -33,15 +48,15 @@ public class App {
 	 *            valor do x que deseja aplicar a função f
 	 * @return retorna o valor do x aplicado na função f
 	 */
-	private static float f(float x) {
+	public static float f(float x) {
 		return (float) (Math.pow(x, 3) - x - 4);
 	}
 
-	private static double f(double x) {
+	public static double f(double x) {
 		return (double) (Math.pow(x, 3) - x - 4);
 	}
 
-	private static float posicaoFalsa(float a, float b, float err) {
+	public static float posicaoFalsa(float a, float b, float err) {
 		float fa, fb, c, fc;
 		fa = f(a);
 		fb = f(b);
@@ -126,8 +141,7 @@ public class App {
 			System.out.println("então faça y = " + x2);
 		}
 	}
-	
-	
+		
 	public static void trapezio(float a, float b, int m) {
 		float h = (b - a) / m;
 		float soma = funcao(a);
@@ -171,7 +185,7 @@ public class App {
 
 	}
 
-	public static void eliminacaoGauusPivotiamentoParcial(double MatCoeficientes[][], double vectConstantes[],
+	public static void eliminacaoGauusPivoTiamentoParcial(double MatCoeficientes[][], double vectConstantes[],
 			double vectorResultados[], int size) {
 
 		EliminacaoGaussPivoParcial MeuSistema = new EliminacaoGaussPivoParcial(MatCoeficientes, vectConstantes,
@@ -191,4 +205,15 @@ public class App {
 										// os X's
 	}
 
+	public static void eliminacaoGaussPivoTiamentoTotal(){
+		
+	}
+	
+	public static void decomposicaoLU(){
+		
+	}
+	
+	public static void simplex(){
+		
+	}
 }
