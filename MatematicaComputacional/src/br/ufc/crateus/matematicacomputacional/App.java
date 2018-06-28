@@ -3,14 +3,15 @@ package br.ufc.crateus.matematicacomputacional;
 public class App {
 
 	private static double h = 0.0000001;
-	
-	/**
-	 * e^x
-	 * 
-	 * @param x
-	 * @return
-	 */
 
+	// x^3 - 9x + 3
+	public static double funcaoSecantNewton(double x) {
+		return Math.pow(x, 3) - 9 * x + 3;
+	}
+	public static float funcaoTrapezio(double x) {
+		return (float) Math.pow(Math.E, x);
+	}
+	// e^x
 	public static float funcao(double x) {
 		return (float) Math.pow(Math.E, x);
 	}
@@ -24,21 +25,24 @@ public class App {
 	}
 
 	public static double function2(double x) {
-		return x*x + 2*x + 1;
+		return x * x + 2 * x + 1;
 	}
-	
+
+	public static double funcion3(double x) {
+		return x - Math.sqrt(7);
+	}
+
 	// x^2 - 9
 	public static double derivada(double x) {
 		return 3 * Math.pow(x, 2) - 9;
 	}
-	
-	
-	public static double d_derivada(double x){
-		return 2*x + 2;
+
+	public static double d_derivada(double x) {
+		return 2 * x + 2;
 	}
-	
-	public static double d_d_derivada(double x){
-		return (function2(x+h)- function2(x))/ h;
+
+	public static double d_d_derivada(double x) {
+		return (function2(x + h) - function2(x)) / h;
 	}
 
 	// CALCULAR A FUNÇÃO QUE ESTEJA TENTANDO APROXIMAR.
@@ -56,24 +60,30 @@ public class App {
 		return (double) (Math.pow(x, 3) - x - 4);
 	}
 
-	public static float posicaoFalsa(float a, float b, float err) {
-		float fa, fb, c, fc;
-		fa = f(a);
-		fb = f(b);
-		c = (b * f(a) - f(b) * a) / (f(a) - f(b));
-		fc = f(c);
-		while (Math.abs(f(c)) > err) {
-			c = (b * f(a) - f(b) * a) / (f(a) - f(b));
-			fc = f(c);
-			if (fa * fc < 0) {
-				b = c;
-				fb = fc;
-			} else {
-				a = c;
-				fa = fc;
-			}
+	public static double false_position(double a, double b, double episilon_1, double episilon_2) {
+		int K_false_position = 0;
+
+		while (b - a >= episilon_1) {
+			double f_a = funcion3(a);
+			double f_b = funcion3(b);
+
+			if (Math.abs(f_a) < episilon_2)
+				return a;
+			if (Math.abs(f_b) < episilon_2)
+				return b;
+
+			double x = (a * f_b - b * f_a) / (f_b - f_a);
+			double f_x = funcion3(x);
+
+			if ((f_a * f_x) > 0)
+				a = x;
+			else
+				b = x;
+
+			K_false_position++;
 		}
-		return c;
+
+		return a - (b - a) / 2;
 	}
 
 	public static double bisection(double a, double b, double e) {
@@ -100,17 +110,17 @@ public class App {
 
 	public static void metodoNewton(double x0, double e1, double e2) {
 
-		if (Math.abs(f(x0)) < e1)
+		if (Math.abs(funcaoSecantNewton(x0)) < e1)
 			System.out.println("faça y = " + x0);
 
 		else {
 			int k = 0;
 
-			double x1 = x0 - (f(x0) / derivada(x0));
+			double x1 = x0 - (funcaoSecantNewton(x0) / derivada(x0));
 
-			while (Math.abs(f(x1)) > e1 || Math.abs(x1 - x0) > e2) {
+			while (Math.abs(funcaoSecantNewton(x1)) > e1 || Math.abs(x1 - x0) > e2) {
 
-				x1 = x0 - (f(x0) / derivada(x0));
+				x1 = x0 - (funcaoSecantNewton(x0) / derivada(x0));
 				x0 = x1;
 				k++;
 			}
@@ -118,10 +128,10 @@ public class App {
 		}
 	}
 
-	public static void secant(double x0, double x1, double e1, double e2){
+	public static void secant(double x0, double x1, double e1, double e2) {
 		if (Math.abs(funcao(x0)) < e1)
 			System.out.println("faça y = " + x0);
-		else if (Math.abs(funcao(x1)) < e1 || Math.abs(x1 - x0) < e2)
+		else if (Math.abs(funcaoSecantNewton(x1)) < e1 || Math.abs(x1 - x0) < e2)
 			System.out.println("faça y = " + x1);
 		else {
 			int k = 1;
@@ -130,26 +140,31 @@ public class App {
 
 			do {
 
-				x2 = x1 - (funcao(x1) / (funcao(x1) - funcao(x0))) * (x1 - x0);
+				x2 = x1 - (funcaoSecantNewton(x1) / (funcaoSecantNewton(x1) - funcaoSecantNewton(x0))) * (x1 - x0);
 
 				x0 = x1;
 				x1 = x2;
 
 				k++;
-			} while (Math.abs(funcao(x2)) > e1 || Math.abs(x2 - x1) > e2);
+			} while (Math.abs(funcaoSecantNewton(x2)) > e1 || Math.abs(x2 - x1) > e2);
 
 			System.out.println("então faça y = " + x2);
 		}
 	}
-		
-	public static void trapezio(float a, float b, int m) {
-		float h = (b - a) / m;
-		float soma = funcao(a);
-		for (int i = 1; i < m; i++) {
-			soma += 2 * funcao(h * i);
-		}
-		soma += funcao(b);
-		System.out.println("Resultado: " + (h * soma) / 2);
+
+	public static void trapezio(float b, float a, int n) {
+
+		float h = (b - a) / n;
+
+		float soma = funcaoTrapezio(a);
+
+		int i;
+		for (i = 1; i < n; i++)
+			soma += 2 * funcaoTrapezio(h * i);
+
+		soma += funcaoTrapezio(b);
+
+		System.out.println("valor: " + (h * soma) / 2);
 	}
 
 	public static void simpson13(float b, float a, int m) {
@@ -166,23 +181,25 @@ public class App {
 		System.out.println("Resultado: " + (soma * h) / 3);
 	}
 
-	public static void gauss_Legendre(float a0, float b0, float t0, float p0, int maxInteration) {
-		float an, bn, tn, pn, aux;
-		for (int i = 0; i < maxInteration; i++) {
-			an = (a0 + b0) / 2;
-			bn = (float) Math.sqrt(a0 * b0);
-			aux = a0 - an; // evita o uso de pow(a, 2)
-			tn = t0 - p0 * aux * aux;
+	public static void gauss_Legendre(float a0, float b0, float t0, float p0, int maxInteration) {	
+		float a_next = 0, b_next = 0, t_next = 0, p_next;
+		while (maxInteration > 0) {
+			a_next = (a0 + b0) / 2;
+			b_next = (float) Math.sqrt((a0 * b0));
+			t_next = (float) (t0 - p0 * Math.pow((a0 - a_next), 2));
+			p_next = 2 * p0;
 
-			// atualizarção das variáveis
-			p0 = 2 * p0;
-			a0 = an;
-			b0 = bn;
-			t0 = tn;
+			a0 = a_next;
+			b0 = b_next;
+			t0 = t_next;
+			p0 = p_next;
+			
+			maxInteration -- ;
+
 		}
-		aux = (a0 + b0) / 2;
-		System.out.println("Resultado é " + (aux * aux / t0));
-
+		
+		float re = (float) ((Math.pow((a_next + b_next),2)) / 4* t_next);
+		System.out.println(re);
 	}
 
 	public static void eliminacaoGauusPivoTiamentoParcial(double MatCoeficientes[][], double vectConstantes[],
@@ -205,15 +222,41 @@ public class App {
 										// os X's
 	}
 
-	public static void eliminacaoGaussPivoTiamentoTotal(){
-		
+	public static void eliminacaoGaussPivoTiamentoTotal() {
+
 	}
-	
-	public static void decomposicaoLU(){
-		
+
+	public static void decomposicaoLU() {
+		double m[][] = null;
+		int size = 0;
+		Decomposicaolu.chamada(m, size);
 	}
-	
-	public static void simplex(){
-		
+
+	public static void simplex() {
+
+	}
+
+	public static void main(String[] args) {
+		// trapezio(2, 1,4 );ok
+		// simpson13(0.8f, 0, 4);ok
+		//System.out.println(bisection(1, 2, 0.001)); OK 
+		//System.out.println(false_position(0, 1, 0.0005, 0.0005)); ok
+		 //metodoNewton(0.5, 0.0001, 0.0001);
+		//secant(0, 1, 0.0005, 0.0005);
+		//System.out.println(GaussLegendre.pi(10));
+
+		/*
+		int n = 2; // Ordem da matriz A
+
+		// Matriz dos coeficientes:
+		double a[][] = { { 0.0002, 2.00 }, { 2.00, 2.00 } };
+
+		// Vetor das constantes...:
+		double b[] = { 5.00, 6.00 };
+
+		// Vetor das soluções: os x's do Sistema!
+		double x[] = new double[n];
+		eliminacaoGauusPivoTiamentoParcial(a, b, x, n);
+		*/
 	}
 }
